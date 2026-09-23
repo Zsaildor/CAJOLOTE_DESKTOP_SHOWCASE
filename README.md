@@ -63,7 +63,7 @@ mindmap
       Generación de Tickets y Reportes PDF
     Hardware e Infraestructura
       Lectores de Código Global Hook
-      Impresoras Térmicas ESC/POS
+      Impresoras Térmicas
       Cifrado Local Windows DPAPI
       SQLite WAL + Sales Archiver
       Sincronización Cloud Firebase
@@ -228,7 +228,7 @@ sequenceDiagram
 * **Barra Lateral Reactiva:** Menú de navegación persistente con iconos claros y resaltado dinámico de la vista activa.
 * **Escaneo Global de Código de Barras:** Intercepta ráfagas de entrada del escáner en cualquier parte de la ventana mediante un gancho global (`Attach(this)`), dirigiéndolas automáticamente al Punto de Venta o al Verificador de Precios según corresponda.
 * **Monitor de Conectividad en Tiempo Real:** Detección de conectividad a internet (`NetworkService`) con alertas visuales y cambio cromático dinámico de indicadores de red.
-* **Sincronización Automática en el Arranque:** Sube transacciones locales pendientes y descarga las actualizaciones del perfil de tienda en segundo plano.
+* **Sincronización Automática en el Arranque:** Respalda la base de datos en segundo plano al iniciar.
 * **Mantenimiento y Desfragmentación Silenciosa:** Invoca a `SalesArchiver` al inicio para mover ventas de meses previos a tablas históricas mientras muestra una pantalla de carga sutil con Lottie.
 * **Atajos de Teclado Globales:** Navegación acelerada mediante combinaciones de teclas:
   * `Alt + 1`: Dashboard
@@ -246,18 +246,17 @@ sequenceDiagram
 
 ### 3. Punto de Venta Ágil (POS) (`PosView`)
 * **Entrada de Productos Multimodal:**
-  * **Lector de Códigos de Barras:** Agregado instantáneo de artículos al carrito con confirmación auditiva/visual.
-  * **Búsqueda Inteligente:** Entrada predictiva por nombre de producto o código con autocompletado en tiempo real.
+  * **Lector de Códigos de Barras:** Agregado instantáneo de artículos al carrito.
   * **Acceso a Productos Rápidos:** Panel con cuadrícula personalizable de artículos sin código físico (ej. bolillo, tortilla, huevo, verduras).
 * **Gestión de Artículos a Granel (Peso):** Detección automática de artículos marcados como `IsBulk`, abriendo un teclado numérico interactivo para digitar la cantidad exacta o decimal en kilogramos (ej. `0.450 kg`).
 * **Carrito de Ventas Reactivo:**
   * Modificación de cantidades unitarias mediante botones `+` y `-` o ingreso directo.
-  * Edición rápida de precio unitario en el propio renglón de la venta para aplicar descuentos o promociones en el acto.
+  * Edición rápida de precio unitario en el propio renglón de la venta para aplicar cambios de precio, descuentos o promociones en el acto.
   * Eliminación selectiva de renglones o vaciado integral de la orden.
 * **Modalidades de Cobro:**
   * **Efectivo:** Calculadora automática de cambio con desglose de billetes recibidos e importe a devolver.
   * **Crédito / Cuenta Fiada:** Vinculación directa del importe de la venta a la nota de deuda de un cliente registrado.
-* **Emisión de Tickets:** Impresión automática directa a impresoras térmicas ESC/POS (puerto serie) y/o generación de tickets limpios en formato PDF estructurado mediante QuestPDF.
+* **Emisión de Tickets:** Impresión automática directa a impresoras térmicas y/o generación de tickets limpios en formato PDF estructurado mediante QuestPDF.
 
 ---
 
@@ -321,22 +320,20 @@ sequenceDiagram
 ---
 
 ### 10. Identidad del Negocio y Recorte de Logotipo (`PerfilView`)
-* **Personalización del Establecimiento:** Configuración de nombre comercial, domicilio, número de teléfono y leyenda de pie de ticket (ej. *"¡Gracias por su compra, vuelva pronto!"*).
+* **Personalización del Establecimiento:** Configuración de nombre comercial, domicilio y número de teléfono que aparece en los tickets.
 * **Editor y Recortador Visual de Logotipo (`ImageCropWindow`):**
-  * Ventana dedicada para cargar imágenes institucionales en formatos PNG o JPG.
-  * Lienzo de recorte y escalado interactivo para ajustar el encuadre exacto del logotipo que será impreso en la cabecera de los tickets térmicos y reportes PDF.
+  * Ventana dedicada para cargar imágenes para el logo del negocio en formatos PNG o JPG (no se imprime en los tickets).
+  * Lienzo de recorte y escalado interactivo para ajustar el encuadre exacto del logotipo.
 
 ---
 
 ### 11. Configuración de Hardware y Sistema (`ConfiguracionView`)
 * **Calibración de Impresora Térmica:**
-  * Detección y selección de puertos serie disponibles en Windows (`COM1`, `COM2`, `COM3`, etc.).
-  * Selección de velocidad de baudios (`BaudRate`: 9600, 19200, 38400, 115200 bps).
-  * Botón de prueba de impresión con corte automático de papel (`ESC/POS test`).
+  * Detección y selección de impresoras vinculadas al dispositivo windows.
+  * Botón de prueba de impresión con corte automático de papel.
 * **Control de Base de Datos y Sincronización:**
   * Monitor del estado de enlace con Cloud Firestore.
-  * Ejecución manual de optimización de almacenamiento (`VACUUM` de SQLite).
-  * Creación y restauración de respaldos locales de la base de datos (`DatabaseBackupService`).
+  * Optimización de almacenamiento.
 
 ---
 
